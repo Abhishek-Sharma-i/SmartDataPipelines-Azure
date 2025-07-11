@@ -1,0 +1,9 @@
+{
+	"name": "ADFProjectAbhi",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "321209d5-ee11-4b23-8390-f884e6f06aaf",
+		"tenantId": "e93318aa-eafe-4701-a0ce-060303e6c07d"
+	}
+}
