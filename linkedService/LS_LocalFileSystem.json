@@ -5,9 +5,9 @@
 		"annotations": [],
 		"type": "FileServer",
 		"typeProperties": {
-			"host": "\"D:\\ADFProject\"",
+			"host": "D:\\ADFProject",
 			"userId": "sqladmin",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI3NjEyMWNmYS0zMzMwLTRiNjQtOTI3MC0zNWEyMTU2NTdmNjAiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIyNDdlMTQ0YS1mOWFjLTRiNDktODRmMC1iZmI1OWNiMDUyNDIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "SHIR-Local",
