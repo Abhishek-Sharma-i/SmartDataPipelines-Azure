@@ -5,8 +5,8 @@
 		"annotations": [],
 		"type": "AzureBlobFS",
 		"typeProperties": {
-			"url": "https://adfstoragedata1.dfs.core.windows.net/",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEQ0Nzg2RjA2LTg1NDQtNDg3Qi05OUI2LTFGRUNFRDJBMUJCNF9kNzZkNjVkOC0wZDhmLTQ4NzEtOTUwMS0zZmVhODNmYmE3YTYiDQp9"
+			"url": "https://adfstoragedata2.dfs.core.windows.net/",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEQ0Nzg2RjA2LTg1NDQtNDg3Qi05OUI2LTFGRUNFRDJBMUJCNF82ZWNkYTgzMS1mMWU5LTQyNDMtODZlOC0zZjU3ZjZmMGZjYzgiDQp9"
 		},
 		"connectVia": {
 			"referenceName": "AutoResolveIntegrationRuntime",
