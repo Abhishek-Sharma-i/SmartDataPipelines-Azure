@@ -1,0 +1,27 @@
+{
+	"name": "ds_threshold_json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls_gen2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "threshold.json",
+				"folderPath": "/",
+				"fileSystem": "input"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"threshold": {
+					"type": "integer"
+				}
+			}
+		}
+	}
+}
