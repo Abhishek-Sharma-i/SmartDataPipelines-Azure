@@ -106,7 +106,11 @@
 							"outputs": [
 								{
 									"referenceName": "ds_customer_json_output",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"directoryPath": "Customer/Year=@{formatDateTime(utcNow(),'yyyy')}/Month=@{formatDateTime(utcNow(),'MM')}/Day=@{formatDateTime(utcNow(),'dd')}",
+										"fileName": "customer.json"
+									}
 								}
 							]
 						}
