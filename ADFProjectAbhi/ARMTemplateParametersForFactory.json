@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ADFProjectAbhi"
+		},
+		"ls_adls_gen2_accountKey": {
+			"value": ""
+		},
+		"ls_blob_storage_connectionString": {
+			"value": ""
+		},
+		"ls_sql_customerdb_password": {
+			"value": ""
+		},
+		"ls_adls_gen2_properties_typeProperties_url": {
+			"value": "https://adfstoragedata2.dfs.core.windows.net/"
+		},
+		"ls_sql_customerdb_properties_typeProperties_server": {
+			"value": "abhi-sql.database.windows.net"
+		},
+		"ls_sql_customerdb_properties_typeProperties_database": {
+			"value": "customerdb"
+		},
+		"ls_sql_customerdb_properties_typeProperties_userName": {
+			"value": "sqladmin"
+		}
+	}
+}
