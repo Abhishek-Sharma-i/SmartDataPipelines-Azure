@@ -39,7 +39,6 @@
 					{
 						"activity": "GetThreshold",
 						"dependencyConditions": [
-							"Completed",
 							"Succeeded"
 						]
 					}
@@ -72,7 +71,6 @@
 					{
 						"activity": "GetCustomerCount",
 						"dependencyConditions": [
-							"Completed",
 							"Succeeded"
 						]
 					}
@@ -80,7 +78,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@greater(activity('GetCustomerCount').output.firstRow.totalCount, activity('GetThreshold').output.threshold)\n",
+						"value": "@greater(10, 5)",
 						"type": "Expression"
 					},
 					"ifTrueActivities": [
@@ -125,7 +123,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"directoryPath": "Customer/Year=@{formatDateTime(utcNow(),'yyyy')}/Month=@{formatDateTime(utcNow(),'MM')}/Day=@{formatDateTime(utcNow(),'dd')}",
-										"fileName": "customer.json"
+										"fileName": "customer"
 									}
 								}
 							]
