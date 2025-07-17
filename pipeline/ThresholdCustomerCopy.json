@@ -81,6 +81,17 @@
 						"value": "@greater(10, 5)",
 						"type": "Expression"
 					},
+					"ifFalseActivities": [
+						{
+							"name": "Wait_FalsePath",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					],
 					"ifTrueActivities": [
 						{
 							"name": "CopyCustomerToADLS",
