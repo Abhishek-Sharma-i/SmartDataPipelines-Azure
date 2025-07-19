@@ -23,7 +23,7 @@
 				"type": "AzureBlobFSLocation",
 				"fileName": "customerdata.json",
 				"folderPath": {
-					"value": "Customer/@{formatDateTime(utcNow(),'yyyy/MM/dd')}\n",
+					"value": "@dataset().folderPath\n",
 					"type": "Expression"
 				},
 				"fileSystem": "customerdata"
