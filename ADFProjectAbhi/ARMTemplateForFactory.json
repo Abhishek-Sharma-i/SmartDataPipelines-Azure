@@ -41,6 +41,172 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Customer_Threshold_DynamicPath')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "GetThreshold",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "ds_threshold_json",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "GetCustomerCount",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "GetThreshold",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT COUNT(*) AS totalCount FROM Customer\n",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "ds_sql_customer_dummy",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "If Condition1",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "GetCustomerCount",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@greater(int(activity('GetCustomerCount').output.firstRow.totalCount), int(activity('GetThreshold').output.firstRow.threshold))",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Wait_FalsePath",
+									"type": "Wait",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": 1
+									}
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "CopyCustomerToADLS",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_customer_sql",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ds_customer_json_output",
+											"type": "DatasetReference",
+											"parameters": {
+												"directoryPath": "Customer/@{formatDateTime(utcNow(),'yyyy/MM/dd')}",
+												"fileName": {
+													"value": "customer_data.json",
+													"type": "Expression"
+												},
+												"folderPath": "Customer/@{formatDateTime(utcNow(),'yyyy/MM/dd')}"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_threshold_json')]",
+				"[concat(variables('factoryId'), '/datasets/ds_sql_customer_dummy')]",
+				"[concat(variables('factoryId'), '/datasets/ds_customer_sql')]",
+				"[concat(variables('factoryId'), '/datasets/ds_customer_json_output')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ThresholdCustomerCopy')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -181,7 +347,8 @@
 											"type": "DatasetReference",
 											"parameters": {
 												"directoryPath": "customer",
-												"fileName": "customer.json"
+												"fileName": "customer.json",
+												"folderPath": "Customer/@{formatDateTime(utcNow(),'yyyy/MM/dd')}"
 											}
 										}
 									]
@@ -217,6 +384,9 @@
 					},
 					"fileName": {
 						"type": "string"
+					},
+					"folderPath": {
+						"type": "string"
 					}
 				},
 				"annotations": [],
@@ -224,7 +394,12 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileSystem": "customer"
+						"fileName": "customerdata.json",
+						"folderPath": {
+							"value": "@dataset().folderPath\n",
+							"type": "Expression"
+						},
+						"fileSystem": "customerdata"
 					}
 				},
 				"schema": {}
