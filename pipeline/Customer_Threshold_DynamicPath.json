@@ -134,7 +134,10 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"directoryPath": "Customer/@{formatDateTime(utcNow(),'yyyy/MM/dd')}",
-										"fileName": "customer_@{formatDateTime(utcNow(),'HHmmss')}.json",
+										"fileName": {
+											"value": "customer_data.json",
+											"type": "Expression"
+										},
 										"folderPath": "Customer/@{formatDateTime(utcNow(),'yyyy/MM/dd')}"
 									}
 								}
