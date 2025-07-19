@@ -11,6 +11,9 @@
 			},
 			"fileName": {
 				"type": "string"
+			},
+			"folderPath": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
@@ -18,7 +21,12 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileSystem": "customer"
+				"fileName": "customerdata.json",
+				"folderPath": {
+					"value": "Customer/@{formatDateTime(utcNow(),'yyyy/MM/dd')}\n",
+					"type": "Expression"
+				},
+				"fileSystem": "customerdata"
 			}
 		},
 		"schema": {}
