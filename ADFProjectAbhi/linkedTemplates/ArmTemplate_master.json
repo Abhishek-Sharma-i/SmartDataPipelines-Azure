@@ -35,6 +35,14 @@
 			"type": "string",
 			"defaultValue": "sqladmin"
 		},
+		"DailyIncrementalTrigger_properties_IncrementalLoadCustomer_parameters_LastRunDate": {
+			"type": "string",
+			"defaultValue": "@formatDateTime(addDays(utcNow(), -1), 'yyyy-MM-ddTHH:mm:ss')"
+		},
+		"DailyIncrementalTrigger_properties_IncrementalLoadCustomer_parameters_CurrentRunDate": {
+			"type": "string",
+			"defaultValue": "@formatDateTime(utcNow(), 'yyyy-MM-ddTHH:mm:ss')"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -82,6 +90,12 @@
 					},
 					"ls_sql_customerdb_properties_typeProperties_userName": {
 						"value": "[parameters('ls_sql_customerdb_properties_typeProperties_userName')]"
+					},
+					"DailyIncrementalTrigger_properties_IncrementalLoadCustomer_parameters_LastRunDate": {
+						"value": "[parameters('DailyIncrementalTrigger_properties_IncrementalLoadCustomer_parameters_LastRunDate')]"
+					},
+					"DailyIncrementalTrigger_properties_IncrementalLoadCustomer_parameters_CurrentRunDate": {
+						"value": "[parameters('DailyIncrementalTrigger_properties_IncrementalLoadCustomer_parameters_CurrentRunDate')]"
 					}
 				}
 			},

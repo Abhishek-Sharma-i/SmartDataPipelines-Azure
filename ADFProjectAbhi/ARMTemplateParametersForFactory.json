@@ -25,6 +25,12 @@
 		},
 		"ls_sql_customerdb_properties_typeProperties_userName": {
 			"value": "sqladmin"
+		},
+		"DailyIncrementalTrigger_properties_IncrementalLoadCustomer_parameters_LastRunDate": {
+			"value": "@formatDateTime(addDays(utcNow(), -1), 'yyyy-MM-ddTHH:mm:ss')"
+		},
+		"DailyIncrementalTrigger_properties_IncrementalLoadCustomer_parameters_CurrentRunDate": {
+			"value": "@formatDateTime(utcNow(), 'yyyy-MM-ddTHH:mm:ss')"
 		}
 	}
 }

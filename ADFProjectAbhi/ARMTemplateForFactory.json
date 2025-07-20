@@ -34,6 +34,14 @@
 		"ls_sql_customerdb_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "sqladmin"
+		},
+		"DailyIncrementalTrigger_properties_IncrementalLoadCustomer_parameters_LastRunDate": {
+			"type": "string",
+			"defaultValue": "@formatDateTime(addDays(utcNow(), -1), 'yyyy-MM-ddTHH:mm:ss')"
+		},
+		"DailyIncrementalTrigger_properties_IncrementalLoadCustomer_parameters_CurrentRunDate": {
+			"type": "string",
+			"defaultValue": "@formatDateTime(utcNow(), 'yyyy-MM-ddTHH:mm:ss')"
 		}
 	},
 	"variables": {
@@ -202,6 +210,85 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_threshold_json')]",
 				"[concat(variables('factoryId'), '/datasets/ds_sql_customer_dummy')]",
+				"[concat(variables('factoryId'), '/datasets/ds_customer_sql')]",
+				"[concat(variables('factoryId'), '/datasets/ds_customer_json_output')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/IncrementalLoadCustomer')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_IncrementalCustomerData",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT * \nFROM Customer\nWHERE LastModifiedDate >= '@{pipeline().parameters.LastRunDate}'\n  AND LastModifiedDate < '@{pipeline().parameters.CurrentRunDate}'",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "ds_customer_sql",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ds_customer_json_output",
+								"type": "DatasetReference",
+								"parameters": {
+									"directoryPath": "incremental/customer",
+									"fileName": "output_@{formatDateTime(pipeline().parameters.CurrentRunDate, 'yyyyMMdd')}.json",
+									"folderPath": "@concat('customer/', formatDateTime(pipeline().parameters.CurrentRunDate, 'yyyy'), '/', formatDateTime(pipeline().parameters.CurrentRunDate, 'MM'), '/', formatDateTime(pipeline().parameters.CurrentRunDate, 'dd'))"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"LastRunDate": {
+						"type": "string",
+						"defaultValue": "2025-07-16T00:00:00"
+					},
+					"CurrentRunDate": {
+						"type": "string",
+						"defaultValue": "2025-07-17T00:00:00"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_customer_sql')]",
 				"[concat(variables('factoryId'), '/datasets/ds_customer_json_output')]"
 			]
@@ -657,6 +744,41 @@
 			"apiVersion": "2018-06-01",
 			"properties": {},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DailyIncrementalTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "IncrementalLoadCustomer",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"LastRunDate": "[parameters('DailyIncrementalTrigger_properties_IncrementalLoadCustomer_parameters_LastRunDate')]",
+							"CurrentRunDate": "[parameters('DailyIncrementalTrigger_properties_IncrementalLoadCustomer_parameters_CurrentRunDate')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2025-07-20T13:14:00",
+						"endTime": "2025-07-21T13:14:00",
+						"timeZone": "India Standard Time",
+						"schedule": {}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/IncrementalLoadCustomer')]"
+			]
 		}
 	]
 }
