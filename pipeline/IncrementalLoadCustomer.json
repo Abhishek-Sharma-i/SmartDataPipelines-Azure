@@ -17,7 +17,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT * FROM Customers\nWHERE LastModifiedDate > '@{pipeline().parameters.LastRunDate}'\n  AND LastModifiedDate <= '@{pipeline().parameters.CurrentRunDate}'\n",
+						"sqlReaderQuery": {
+							"value": "SELECT * \nFROM Customer\nWHERE LastModifiedDate >= '@{pipeline().parameters.LastRunDate}'\n  AND LastModifiedDate < '@{pipeline().parameters.CurrentRunDate}'",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -53,10 +56,12 @@
 		],
 		"parameters": {
 			"LastRunDate": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "2025-07-16T00:00:00"
 			},
 			"CurrentRunDate": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "2025-07-17T00:00:00"
 			}
 		},
 		"annotations": []
