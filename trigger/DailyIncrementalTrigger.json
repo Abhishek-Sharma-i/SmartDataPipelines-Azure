@@ -1,0 +1,29 @@
+{
+	"name": "DailyIncrementalTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "IncrementalLoadCustomer",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"LastRunDate": "@formatDateTime(addDays(utcNow(), -1), 'yyyy-MM-ddTHH:mm:ss')",
+					"CurrentRunDate": "@formatDateTime(utcNow(), 'yyyy-MM-ddTHH:mm:ss')"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2025-07-20T13:14:00",
+				"endTime": "2025-07-21T13:14:00",
+				"timeZone": "India Standard Time"
+			}
+		}
+	}
+}
