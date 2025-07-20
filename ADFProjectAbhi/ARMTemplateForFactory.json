@@ -124,7 +124,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"expression": {
-								"value": "@greater(int(activity('GetCustomerCount').output.firstRow.totalCount), int(activity('GetThreshold').output.firstRow.threshold))",
+								"value": "@greater(activity('GetCustomerCount').output.firstRow.totalCount, activity('GetThreshold').output.firstRow.threshold)",
 								"type": "Expression"
 							},
 							"ifFalseActivities": [
