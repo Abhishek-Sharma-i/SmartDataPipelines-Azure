@@ -1,6 +1,56 @@
 {
 	"name": "IncrementalLoadCustomer",
 	"properties": {
+		"activities": [
+			{
+				"name": "Copy_IncrementalCustomerData",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * FROM Customers\nWHERE LastModifiedDate > '@{pipeline().parameters.LastRunDate}'\n  AND LastModifiedDate <= '@{pipeline().parameters.CurrentRunDate}'\n",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_customer_sql",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_customer_json_output",
+						"type": "DatasetReference",
+						"parameters": {
+							"directoryPath": "incremental/customer",
+							"fileName": "output_@{formatDateTime(pipeline().parameters.CurrentRunDate, 'yyyyMMdd')}.json",
+							"folderPath": "@concat('customer/', formatDateTime(pipeline().parameters.CurrentRunDate, 'yyyy'), '/', formatDateTime(pipeline().parameters.CurrentRunDate, 'MM'), '/', formatDateTime(pipeline().parameters.CurrentRunDate, 'dd'))"
+						}
+					}
+				]
+			}
+		],
 		"parameters": {
 			"LastRunDate": {
 				"type": "string"
