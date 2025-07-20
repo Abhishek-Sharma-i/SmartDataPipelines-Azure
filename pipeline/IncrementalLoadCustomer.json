@@ -1,0 +1,14 @@
+{
+	"name": "IncrementalLoadCustomer",
+	"properties": {
+		"parameters": {
+			"LastRunDate": {
+				"type": "string"
+			},
+			"CurrentRunDate": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}
