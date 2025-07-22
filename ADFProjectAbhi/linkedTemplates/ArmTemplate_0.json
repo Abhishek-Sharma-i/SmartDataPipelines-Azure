@@ -504,6 +504,108 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Foreach_Example2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.TableList",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Copy data1",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"sqlReaderQuery": {
+												"value": "@concat('SELECT * FROM ', item().tableName, ' WHERE ', item().filter)\n",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "ds_customer_sql",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "ds_customer_json_output",
+											"type": "DatasetReference",
+											"parameters": {
+												"directoryPath": "foreach_output/@{item().tableName}/@{utcNow('yyyy/MM/dd')}",
+												"fileName": "@{item().tableName}_@{formatDateTime(utcNow(),'yyyyMMdd_HHmmss')}.json",
+												"folderPath": {
+													"value": "foreach_output/@{item().tableName}/@{utcNow('yyyy/MM/dd')}",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"TableList": {
+						"type": "array",
+						"defaultValue": [
+							{
+								"tableName": "Product",
+								"filter": "ProductID > 100"
+							},
+							{
+								"tableName": "Customer",
+								"filter": "CustomerID > 100 AND CustomerID < 1000"
+							}
+						]
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_customer_sql')]",
+				"[concat(variables('factoryId'), '/datasets/ds_customer_json_output')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/IncrementalLoadCustomer')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -771,8 +873,7 @@
 						"interval": 1,
 						"startTime": "2025-07-20T13:14:00",
 						"endTime": "2025-07-21T13:14:00",
-						"timeZone": "India Standard Time",
-						"schedule": {}
+						"timeZone": "India Standard Time"
 					}
 				}
 			},
