@@ -41,6 +41,9 @@
 				},
 				{
 					"name": "SortByID"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -70,9 +73,20 @@
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> JoinCustomerAddress",
 				"SrcCustomer derive(CustomerID = toString(CustomerID)) ~> DerivedColumn1",
-				"JoinCustomerAddress filter(CustomerID > 1000 && CustomerID < 2000",
-				") ~> FilterCustomerRange",
+				"select1 filter(CustID> 1000 && CustID <2000) ~> FilterCustomerRange",
 				"FilterCustomerRange sort(asc(DerivedColumn1@CustomerID, true)) ~> SortByID",
+				"JoinCustomerAddress select(mapColumn(",
+				"          CustID = DerivedColumn1@CustomerID,",
+				"          Name,",
+				"          Email,",
+				"          AddID = SrcAddress@CustomerID,",
+				"          Address,",
+				"          City,",
+				"          State,",
+				"          Pincode",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
 				"SortByID sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
