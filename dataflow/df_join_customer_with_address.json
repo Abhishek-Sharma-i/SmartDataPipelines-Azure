@@ -1,0 +1,87 @@
+{
+	"name": "df_join_customer_with_address",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_customer_sql",
+						"type": "DatasetReference"
+					},
+					"name": "SrcCustomer",
+					"description": "SELECT * FROM Customer"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_customer_address_csv",
+						"type": "DatasetReference"
+					},
+					"name": "SrcAddress"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Parquet1",
+						"type": "DatasetReference"
+					},
+					"name": "SinkToParquet"
+				}
+			],
+			"transformations": [
+				{
+					"name": "JoinCustomerAddress"
+				},
+				{
+					"name": "DerivedColumn1"
+				},
+				{
+					"name": "FilterCustomerRange"
+				},
+				{
+					"name": "SortByID"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          CustomerID as integer,",
+				"          Name as string,",
+				"          Email as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT * FROM Customer',",
+				"     format: 'query') ~> SrcCustomer",
+				"source(output(",
+				"          CustomerID as string,",
+				"          Address as string,",
+				"          City as string,",
+				"          State as string,",
+				"          Pincode as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> SrcAddress",
+				"DerivedColumn1, SrcAddress join(DerivedColumn1@CustomerID == SrcAddress@CustomerID,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> JoinCustomerAddress",
+				"SrcCustomer derive(CustomerID = toString(CustomerID)) ~> DerivedColumn1",
+				"JoinCustomerAddress filter(CustomerID > 1000 && CustomerID < 2000",
+				") ~> FilterCustomerRange",
+				"FilterCustomerRange sort(asc(DerivedColumn1@CustomerID, true)) ~> SortByID",
+				"SortByID sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SinkToParquet"
+			]
+		}
+	}
+}
