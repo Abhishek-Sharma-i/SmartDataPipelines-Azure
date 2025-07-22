@@ -75,7 +75,7 @@
 				"select2 derive(CustID = toString(CustID)) ~> DerivedColumn1",
 				"JoinCustomerAddress filter(toInteger(CustID) > 1000 && toInteger(CustID) < 2000",
 				") ~> FilterCustomerRange",
-				"FilterCustomerRange sort(asc(DerivedColumn1@CustomerID, true)) ~> SortByID",
+				"FilterCustomerRange sort(asc(CustID, true)) ~> SortByID",
 				"SrcCustomer select(mapColumn(",
 				"          CustID = CustomerID,",
 				"          Name,",
