@@ -58,7 +58,12 @@
 									"referenceName": "ds_customer_json_output",
 									"type": "DatasetReference",
 									"parameters": {
-										"folderPath": "foreach_output/@{item().tableName}/@{utcnow('yyyy/MM/dd')}"
+										"directoryPath": "foreach_output/@{item().tableName}/@{utcNow('yyyy/MM/dd')}",
+										"fileName": "@{item().tableName}_@{formatDateTime(utcNow(),'yyyyMMdd_HHmmss')}.json",
+										"folderPath": {
+											"value": "foreach_output/@{item().tableName}/@{utcNow('yyyy/MM/dd')}",
+											"type": "Expression"
+										}
 									}
 								}
 							]
