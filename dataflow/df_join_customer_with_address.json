@@ -43,7 +43,7 @@
 					"name": "SortByID"
 				},
 				{
-					"name": "select1"
+					"name": "select2"
 				}
 			],
 			"scriptLines": [
@@ -67,26 +67,22 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> SrcAddress",
-				"DerivedColumn1, SrcAddress join(DerivedColumn1@CustomerID == SrcAddress@CustomerID,",
+				"DerivedColumn1, SrcAddress join(CustID == CustomerID,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> JoinCustomerAddress",
-				"SrcCustomer derive(CustomerID = toString(CustomerID)) ~> DerivedColumn1",
-				"select1 filter(CustID> 1000 && CustID <2000) ~> FilterCustomerRange",
+				"select2 derive(CustID = toString(CustID)) ~> DerivedColumn1",
+				"JoinCustomerAddress filter(toInteger(CustID) > 1000 && toInteger(CustID) < 2000",
+				") ~> FilterCustomerRange",
 				"FilterCustomerRange sort(asc(DerivedColumn1@CustomerID, true)) ~> SortByID",
-				"JoinCustomerAddress select(mapColumn(",
-				"          CustID = DerivedColumn1@CustomerID,",
+				"SrcCustomer select(mapColumn(",
+				"          CustID = CustomerID,",
 				"          Name,",
-				"          Email,",
-				"          AddID = SrcAddress@CustomerID,",
-				"          Address,",
-				"          City,",
-				"          State,",
-				"          Pincode",
+				"          Email",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
+				"     skipDuplicateMapOutputs: true) ~> select2",
 				"SortByID sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
