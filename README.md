@@ -1,12 +1,12 @@
-## Azure Data Factory + ADLS Gen2 Project
+# Azure Data Factory + ADLS Gen2 Project
 End-to-End Data Pipelines on Azure (SQL → ADLS | ForEach | Data Flow | Conditional Copy | Join)
 
 I would like to express my gratitude to CSI (Celebal Summer Internship- https://celebaltech.com/) for the opportunity to work on this end-to-end Data Engineering project. This hands-on experience helped me understand the building blocks of Azure-based data pipelines, real-world ETL workflows, parameterization, conditional logic, and data transformation using ADF (Azure Data Factory) and ADLS Gen2.
 
-# 🧭 Project Overview
+## 🧭 Project Overview
 The project was split into multiple independent tasks. Each task reflects a key concept in modern data engineering, including parameterized pipelines, ForEach control flows, conditional copying, folder partitioning, joining heterogeneous data sources, and saving optimized file formats like JSON & Parquet.
 
-✅ Task 1: Threshold-Based Conditional Copy (SQL → ADLS)
+### ✅ Task 1: Threshold-Based Conditional Copy (SQL → ADLS)
 Objective:
 Create a pipeline that:
 
@@ -37,7 +37,7 @@ Customer/<Year>/<Month>/<Day>/
 
 
 
-✅ Task 2: Overwrite Data by Partitioned Path
+### ✅ Task 2: Overwrite Data by Partitioned Path
 Objective:
 Ensure every run of the pipeline writes the customer JSON data to a dynamically partitioned folder:
 
@@ -54,7 +54,7 @@ This prevents overwriting while enabling versioned ingestion.
 
 
 
-✅ Task 3: Parameterized ForEach Pipeline for Copying Multiple Tables
+### ✅ Task 3: Parameterized ForEach Pipeline for Copying Multiple Tables
 Pipeline Name: Foreach_Example2
 
 Objective:
@@ -92,7 +92,7 @@ foreach_output/@{item().tableName}/@{utcNow('yyyy/MM/dd')}
 
 
 
-✅ Task 4: Data Flow - Join Customer (SQL) with Address (CSV)
+### ✅ Task 4: Data Flow - Join Customer (SQL) with Address (CSV)
 Objective:
 Join:
 
@@ -127,7 +127,7 @@ joined_output/customer_joined.parquet
 <img width="1920" height="1080" alt="DataFlowSummary" src="https://github.com/user-attachments/assets/cb27a84f-4589-4a87-be06-43fbae7b5665" />
 
 
-🗂 Folder Structure in ADLS Gen2
+## 🗂 Folder Structure in ADLS Gen2
 pgsql
 Copy
 Edit
@@ -147,7 +147,7 @@ adlsroot/
 
 
 
-    🧠 Key Learnings & Concepts
+   ## 🧠 Key Learnings & Concepts
 ✅ Parameterization using expressions in ADF
 ✅ ForEach control for looping SQL table copies
 ✅ JSON-based dynamic queries
@@ -158,7 +158,7 @@ adlsroot/
 ✅ Sink optimization using format-specific configurations
 
 
-🔁 Reusability
+## 🔁 Reusability
 All SQL queries and copy logic are dynamic and accept parameters.
 
 Easily add more tables to copy by just extending the parameter list.
