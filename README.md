@@ -1,4 +1,4 @@
-Azure Data Factory + ADLS Gen2 Project
+## Azure Data Factory + ADLS Gen2 Project
 End-to-End Data Pipelines on Azure (SQL → ADLS | ForEach | Data Flow | Conditional Copy | Join)
 
 I would like to express my gratitude to CSI (Celebal Summer Internship- https://celebaltech.com/) for the opportunity to work on this end-to-end Data Engineering project. This hands-on experience helped me understand the building blocks of Azure-based data pipelines, real-world ETL workflows, parameterization, conditional logic, and data transformation using ADF (Azure Data Factory) and ADLS Gen2.
