@@ -3,7 +3,7 @@ End-to-End Data Pipelines on Azure (SQL → ADLS | ForEach | Data Flow | Conditi
 
 I would like to express my gratitude to CSI (Celebal Summer Internship- https://celebaltech.com/) for the opportunity to work on this end-to-end Data Engineering project. This hands-on experience helped me understand the building blocks of Azure-based data pipelines, real-world ETL workflows, parameterization, conditional logic, and data transformation using ADF (Azure Data Factory) and ADLS Gen2.
 
-🧭 Project Overview
+# 🧭 Project Overview
 The project was split into multiple independent tasks. Each task reflects a key concept in modern data engineering, including parameterized pipelines, ForEach control flows, conditional copying, folder partitioning, joining heterogeneous data sources, and saving optimized file formats like JSON & Parquet.
 
 ✅ Task 1: Threshold-Based Conditional Copy (SQL → ADLS)
